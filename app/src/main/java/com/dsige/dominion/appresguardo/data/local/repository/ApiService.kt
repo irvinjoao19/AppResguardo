@@ -28,28 +28,9 @@ interface ApiService {
     @Headers("Cache-Control: no-cache")
     @POST("SaveMovil")
     fun saveMovil(@Body body: RequestBody): Call<Mensaje>
-//
-//    @Headers("Cache-Control: no-cache")
-//    @POST("SaveRegistro")
-//    fun sendRegistroOt(@Body body: RequestBody): Observable<Mensaje>
-//
-//    @Headers("Cache-Control: no-cache")
-//    @POST("Proveedores")
-//    fun getProveedor(@Body body: RequestBody): Observable<List<Proveedor>>
-//
-//    @Headers("Cache-Control: no-cache")
-//    @POST("Empresas")
-//    fun getEmpresa(@Body body: RequestBody): Observable<List<OtReporte>>
-//
-//    @Headers("Cache-Control: no-cache")
-//    @POST("JefeCuadrillas")
-//    fun getJefeCuadrilla(@Body body: RequestBody): Observable<List<JefeCuadrilla>>
-//
-//    @Headers("Cache-Control: no-cache")
-//    @POST("OtPlazo")
-//    fun getOtPlazo(@Body body: RequestBody): Observable<List<OtPlazo>>
-//
-//    @Headers("Cache-Control: no-cache")
-//    @POST("OtPlazoDetalle")
-//    fun getOtPlazoDetalle(@Body body: RequestBody): Observable<List<OtPlazoDetalle>>
+
+    @Headers("Cache-Control: no-cache")
+    @POST("SaveRegistro")
+    fun saveRegistro(@Body body: RequestBody): Observable<Mensaje>
+
 }

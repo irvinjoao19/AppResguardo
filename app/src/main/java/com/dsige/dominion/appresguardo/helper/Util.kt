@@ -125,7 +125,7 @@ object Util {
 
     fun getHoraActual(): String {
         date = Date()
-        @SuppressLint("SimpleDateFormat") val format = SimpleDateFormat("HH:mm:ss aaa")
+        @SuppressLint("SimpleDateFormat") val format = SimpleDateFormat("HH:mm aaaa")
         return format.format(date)
     }
 
@@ -219,7 +219,7 @@ object Util {
         return df.format(date)
     }
 
-    fun getDateTimeFormatString(): String {
+    private fun getDateTimeFormatString(): String {
         val date = Date()
         @SuppressLint("SimpleDateFormat") val df = SimpleDateFormat("dd/MM/yyyy - hh:mm:ss a")
         return df.format(date)
@@ -860,15 +860,16 @@ object Util {
     fun getLocationName(
         context: Context,
         input: TextInputEditText,
-        location: Location,
+        latitude: Double,
+        longitude: Double,
         progressBar: ProgressBar
     ) {
         val nombre = arrayOf("")
         try {
             val addressObservable = Observable.just(
                 Geocoder(context).getFromLocation(
-                    location.latitude,
-                    location.longitude,
+                    latitude,
+                    longitude,
                     1
                 )[0]
             )
@@ -920,5 +921,27 @@ object Util {
                 }
             }
         }
+    }
+
+    @SuppressLint("SimpleDateFormat")
+    fun getDifferenceBetwenDates(dateInicio: String, dateFinal: String): String {
+
+        val inicio = dateInicio.substring(0, 4) + ":00"
+        val final = dateFinal.substring(0, 4) + ":00"
+
+        val date1 = SimpleDateFormat("HH:mm:ss").parse(inicio)!!
+        val date2 = SimpleDateFormat("HH:mm:ss").parse(final)!!
+
+        val milliseconds = date2.time - date1.time
+        val seconds = (milliseconds / 1000).toInt() % 60
+        val minutes = (milliseconds / (1000 * 60) % 60).toInt()
+        val hours = (milliseconds / (1000 * 60 * 60) % 24).toInt()
+        val c = Calendar.getInstance()
+        c[Calendar.SECOND] = seconds
+        c[Calendar.MINUTE] = minutes
+        c[Calendar.HOUR_OF_DAY] = hours
+
+        val result = SimpleDateFormat("HH:mm")
+        return result.format(c.time)
     }
 }

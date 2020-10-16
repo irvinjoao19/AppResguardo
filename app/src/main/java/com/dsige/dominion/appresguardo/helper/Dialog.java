@@ -1,6 +1,7 @@
 package com.dsige.dominion.appresguardo.helper;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -19,6 +20,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Objects;
 
 class Dialog {
 
@@ -30,12 +32,11 @@ class Dialog {
         Date date = new Date();
         @SuppressLint("SimpleDateFormat") SimpleDateFormat format = new SimpleDateFormat("ddMMyyyy_HHmmssSSS");
         String fechaActual = format.format(date);
-        return String.format("Foto%s_%s.jpg", id, fechaActual);
+        return String.format("Firm%s_%s.jpg", id, fechaActual);
     }
 
-
-    static File getFolder() {
-        File folder = new File(Environment.getExternalStorageDirectory(), FolderImg);
+    static File getFolder(Context context) {
+        File folder = new File(Objects.requireNonNull(context.getExternalFilesDir(null)).getAbsolutePath());
         if (!folder.exists()) {
             if (folder.mkdirs()) {
                 Log.i("TAG", "FOLDER CREADO");

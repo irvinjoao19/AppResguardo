@@ -164,17 +164,9 @@ public class PaintView extends View {
         return x + y > 100;
     }
 
-    public String save(int id) {
-
-        File folder = Dialog.getFolder();
-        if (!folder.exists()) {
-            if (folder.mkdirs()) {
-                Log.i("TAG", "FOLDER CREATED");
-            }
-        }
-        String nameImg = Dialog.getFotoName(id) + ".jpg";
-        File image = new File(folder, nameImg);
-        String direction = folder + "/" + nameImg;
+    public String save(Context context , int id) {
+        String nameImg = Dialog.getFotoName(id);
+        File image = new File(Dialog.getFolder(context), nameImg);
         try {
             FileOutputStream out = new FileOutputStream(image);
             mBitmap.compress(Bitmap.CompressFormat.JPEG, 90, out);
@@ -183,7 +175,7 @@ public class PaintView extends View {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        Dialog.comprimirImagen(direction);
+        Dialog.comprimirImagen(image.getAbsolutePath());
         return nameImg;
     }
 }

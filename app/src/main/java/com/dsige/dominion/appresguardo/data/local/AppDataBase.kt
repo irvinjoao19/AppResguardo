@@ -10,20 +10,32 @@ import com.dsige.dominion.appresguardo.data.local.model.*
 @Database(
     entities = [
         Usuario::class,
-        Accesos::class
+        Accesos::class,
+        Area::class,
+        Cargo::class,
+        Estado::class,
+        ParteDiario::class,
+        Personal::class,
+        TipoDocumento::class
     ],
-    version = 1, // version 1 en play store
+    version = 4, // version 1 en play store
     exportSchema = false
 )
 abstract class AppDataBase : RoomDatabase() {
 
-    abstract fun usuarioDao(): UsuarioDao
     abstract fun accesosDao(): AccesosDao
+    abstract fun areaDao(): AreaDao
+    abstract fun cargoDao(): CargoDao
+    abstract fun estadoDao(): EstadoDao
+    abstract fun parteDiarioDao(): ParteDiarioDao
+    abstract fun personalDao(): PersonalDao
+    abstract fun tipoDocumentoDao(): TipoDocumentoDao
+    abstract fun usuarioDao(): UsuarioDao
 
     companion object {
         @Volatile
         var INSTANCE: AppDataBase? = null
-        val DB_NAME = "utf_db"
+        val DB_NAME = "resguar_db"
     }
 
     fun getDatabase(context: Context): AppDataBase {
@@ -32,7 +44,7 @@ abstract class AppDataBase : RoomDatabase() {
                 if (INSTANCE == null) {
                     INSTANCE = Room.databaseBuilder(
                         context.applicationContext,
-                        AppDataBase::class.java, "utf_db"
+                        AppDataBase::class.java, "resguardo_db"
                     )
                         .fallbackToDestructiveMigration()
                         .build()

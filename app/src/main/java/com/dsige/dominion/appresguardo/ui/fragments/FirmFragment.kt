@@ -1,59 +1,123 @@
 package com.dsige.dominion.appresguardo.ui.fragments
 
+import android.content.Intent
 import android.os.Bundle
-import androidx.fragment.app.Fragment
+import android.os.Handler
+import android.os.Looper
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.ViewModelProvider
 import com.dsige.dominion.appresguardo.R
+import com.dsige.dominion.appresguardo.data.local.model.ParteDiario
+import com.dsige.dominion.appresguardo.data.viewModel.OtViewModel
+import com.dsige.dominion.appresguardo.data.viewModel.ViewModelFactory
+import com.dsige.dominion.appresguardo.helper.Util
+import com.dsige.dominion.appresguardo.ui.activities.FirmActivity
+import com.squareup.picasso.Callback
+import com.squareup.picasso.Picasso
+import dagger.android.support.DaggerFragment
+import kotlinx.android.synthetic.main.fragment_firm.*
+import java.io.File
+import javax.inject.Inject
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
 
-/**
- * A simple [Fragment] subclass.
- * Use the [FirmFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
-class FirmFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
+class FirmFragment : DaggerFragment(), View.OnClickListener {
+
+    override fun onClick(v: View) {
+        if (t.nroObraTD.isNotEmpty()) {
+            startActivity(
+                Intent(context, FirmActivity::class.java)
+                    .putExtra("otId", otId)
+                    .putExtra("tipo", tipo)
+            )
+        } else
+            otViewModel.setError("Completar primer formulario")
+
+    }
+
+    @Inject
+    lateinit var viewModelFactory: ViewModelFactory
+    lateinit var otViewModel: OtViewModel
+    lateinit var t: ParteDiario
+    private var otId: Int = 0
+    private var tipo: Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        t = ParteDiario()
         arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
+            otId = it.getInt(ARG_PARAM1)
+            tipo = it.getInt(ARG_PARAM2)
         }
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_firm, container, false)
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        bindUI()
+    }
+
+    private fun bindUI() {
+        otViewModel =
+            ViewModelProvider(this, viewModelFactory).get(OtViewModel::class.java)
+        otViewModel.getOtById(otId).observe(viewLifecycleOwner, {
+            if (it != null) {
+                t = it
+                when (tipo) {
+                    1 -> if (it.firmaEfectivoPolicial.isNotEmpty()) {
+                        getFirma(it.firmaEfectivoPolicial)
+                        return@observe
+                    }
+                    2 -> if (it.firmaJefeCuadrilla.isNotEmpty()) {
+                        getFirma(it.firmaJefeCuadrilla)
+                        return@observe
+                    }
+                }
+            }
+        })
+
+        fabFirma.setOnClickListener(this)
+
+        otViewModel.mensajeError.observe(viewLifecycleOwner, { m ->
+            Util.snackBarMensaje(view!!, m)
+        })
+    }
+
+    private fun getFirma(s: String) {
+        progressBar.visibility = View.VISIBLE
+        Looper.myLooper()?.let {
+            Handler(it).postDelayed({
+                val f = File(Util.getFolder(context!!), s)
+                Picasso.get().load(f)
+                    .into(imgFirma, object : Callback {
+                        override fun onSuccess() {
+                            progressBar.visibility = View.GONE
+                        }
+
+                        override fun onError(e: Exception?) {
+                            Log.i("TAG", e.toString())
+                        }
+                    })
+            }, 1000)
+        }
+    }
+
     companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment FirmFragment.
-         */
-        // TODO: Rename and change types and number of parameters
         @JvmStatic
-        fun newInstance(param1: String, param2: String) =
+        fun newInstance(param1: Int, param2: Int) =
             FirmFragment().apply {
                 arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
+                    putInt(ARG_PARAM1, param1)
+                    putInt(ARG_PARAM2, param2)
                 }
             }
     }

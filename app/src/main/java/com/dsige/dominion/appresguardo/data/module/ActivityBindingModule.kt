@@ -12,19 +12,10 @@ abstract class ActivityBindingModule {
 
     @ContributesAndroidInjector(modules = [FragmentBindingModule.Main::class])
     internal abstract fun bindMainActivity(): MainActivity
-//
-//    @ContributesAndroidInjector(modules = [FragmentBindingModule.Form::class])
-//    internal abstract fun bindFormActivity(): FormActivity
-//
-//    @ContributesAndroidInjector
-//    internal abstract fun bindFormDetailActivity(): FormDetailActivity
-//
-//    @ContributesAndroidInjector
-//    internal abstract fun bindPreviewCameraActivity(): PreviewCameraActivity
-//
-//    @ContributesAndroidInjector(modules = [FragmentBindingModule.Reporte::class])
-//    internal abstract fun bindMapActivity(): MapActivity
-//
-//    @ContributesAndroidInjector
-//    internal abstract fun bindOtPlazoActivity(): OtPlazoActivity
+
+    @ContributesAndroidInjector(modules = [FragmentBindingModule.Form::class])
+    internal abstract fun bindFormActivity(): FormActivity
+
+    @ContributesAndroidInjector
+    internal abstract fun bindFirmActivity(): FirmActivity
 }

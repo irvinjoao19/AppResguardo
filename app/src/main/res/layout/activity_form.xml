@@ -13,7 +13,7 @@
         android:theme="@style/AppTheme.AppBarOverlay"
         app:layout_constraintTop_toTopOf="parent">
 
-        <!--        app:layout_scrollFlags="scroll|enterAlways|enterAlwaysCollapsed"-->
+        <!--app:layout_scrollFlags="scroll|enterAlways|enterAlwaysCollapsed"-->
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
@@ -28,6 +28,7 @@
             android:background="@drawable/side_nav_bar"
             android:minHeight="?attr/actionBarSize"
             app:tabIndicatorColor="@color/colorAccent"
+            app:tabMode="scrollable"
             app:tabTextColor="@color/colorWhite"
             tools:ignore="UnusedAttribute" />
     </com.google.android.material.appbar.AppBarLayout>

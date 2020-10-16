@@ -30,12 +30,42 @@ class DataBaseModule {
     }
 
     @Provides
-    internal fun provideUsuarioDao(appDataBase: AppDataBase): UsuarioDao {
-        return appDataBase.usuarioDao()
+    internal fun provideAccesosDao(appDataBase: AppDataBase): AccesosDao {
+        return appDataBase.accesosDao()
     }
 
     @Provides
-    internal fun provideAccesoDao(appDataBase: AppDataBase): AccesosDao {
-        return appDataBase.accesosDao()
+    internal fun provideAreaDao(appDataBase: AppDataBase): AreaDao {
+        return appDataBase.areaDao()
+    }
+
+    @Provides
+    internal fun provideCargoDao(appDataBase: AppDataBase): CargoDao {
+        return appDataBase.cargoDao()
+    }
+
+    @Provides
+    internal fun provideEstadoDao(appDataBase: AppDataBase): EstadoDao {
+        return appDataBase.estadoDao()
+    }
+
+    @Provides
+    internal fun provideParteDiarioDao(appDataBase: AppDataBase): ParteDiarioDao {
+        return appDataBase.parteDiarioDao()
+    }
+
+    @Provides
+    internal fun providePersonalDao(appDataBase: AppDataBase): PersonalDao {
+        return appDataBase.personalDao()
+    }
+
+    @Provides
+    internal fun provideTipoDocumentoDao(appDataBase: AppDataBase): TipoDocumentoDao {
+        return appDataBase.tipoDocumentoDao()
+    }
+
+    @Provides
+    internal fun provideUsuarioDao(appDataBase: AppDataBase): UsuarioDao {
+        return appDataBase.usuarioDao()
     }
 }

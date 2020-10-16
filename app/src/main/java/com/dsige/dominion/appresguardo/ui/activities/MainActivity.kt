@@ -107,42 +107,14 @@ class MainActivity : DaggerAppCompatActivity(), NavigationView.OnNavigationItemS
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         when (item.title) {
-//            "Sincronizar" -> dialogFunction(
-//                1, "Se elimiran todos tus avances deseas volver a sincronizar ?"
-//            )
-//            "Lista de Pendientes" -> changeFragment(
-//                GeneralMapFragment.newInstance("", ""), item.title.toString()
-//            )
-//            "Lista de Ordenes" -> changeFragment(
-//                MainFragment.newInstance(
-//                    usuarioId,
-//                    empresaId,
-//                    personalId,
-//                    servicioId,
-//                    nombreServicio
-//                ), item.title.toString()
-//            )
-//            "Resumen de Ordenes de Trabajo por Proveedor" -> changeFragment(
-//                ResumenFragment.newInstance(
-//                    usuarioId,
-//                    empresaId,
-//                    personalId,
-//                    servicioId,
-//                    nombreServicio
-//                ), item.title.toString()
-//            )
-//            "OT fuera de Plazo" -> changeFragment(
-//                PlazoFragment.newInstance(
-//                    usuarioId,
-//                    empresaId,
-//                    personalId,
-//                    servicioId,
-//                    nombreServicio
-//                ), item.title.toString()
-//            )
-//            "Ubicacion del Personal" -> Util.toastMensaje(this, item.title.toString())
-//            "Enviar Pendientes" -> dialogFunction(2, "Deseas enviar registros ?")
-//            "Cerrar Sesión" -> dialogFunction(3, "Deseas Salir ?")
+            "Sincronizar" -> dialogFunction(
+                1, "Se elimiran todos tus avances deseas volver a sincronizar ?"
+            )
+            "Lista de Partes de Trabajo" -> changeFragment(
+                MainFragment.newInstance(usuarioId, empresaId), item.title.toString()
+            )
+            "Enviar Pendientes" -> dialogFunction(2, "Deseas enviar registros ?")
+            "Cerrar Sesión" -> dialogFunction(3, "Deseas Salir ?")
         }
         drawerLayout.closeDrawer(GravityCompat.START)
         return true
@@ -181,11 +153,7 @@ class MainActivity : DaggerAppCompatActivity(), NavigationView.OnNavigationItemS
         supportFragmentManager
             .beginTransaction()
             .replace(
-                R.id.content_frame,
-                MainFragment.newInstance("",""
-//                    usuarioId, empresaId, personalId, servicioId,
-//                    nombreServicio
-                )
+                R.id.content_frame, MainFragment.newInstance(usuarioId, empresaId)
             )
             .commit()
         supportActionBar!!.title = "Reparación de Veredas"
@@ -246,7 +214,7 @@ class MainActivity : DaggerAppCompatActivity(), NavigationView.OnNavigationItemS
                     }
                     2 -> {
                         load("Enviando..")
-//                        usuarioViewModel.sendData(this)
+                        usuarioViewModel.sendData(this)
                     }
                     3 -> {
                         logout = "on"

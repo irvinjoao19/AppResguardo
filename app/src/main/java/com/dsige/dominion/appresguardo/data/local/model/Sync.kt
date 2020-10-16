@@ -1,10 +1,10 @@
 package com.dsige.dominion.appresguardo.data.local.model
 
 open class Sync {
-//    var ots: List<Ot> = ArrayList()
-//    var groups: List<Grupo> = ArrayList()
-//    var estados: List<Estado> = ArrayList()
-//    var materials: List<Material> = ArrayList()
-//    var distritos: List<Distrito> = ArrayList()
-//    var servicios: List<Servicio> = ArrayList()
+    var pds: List<ParteDiario> = ArrayList()
+    var personals: List<Personal> = ArrayList()
+    var cargos: List<Cargo> = ArrayList()
+    var areas: List<Area> = ArrayList()
+    var estados: List<Estado> = ArrayList()
+    var tipoDocuments: List<TipoDocumento> = ArrayList()
 }
