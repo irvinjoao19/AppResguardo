@@ -25,4 +25,7 @@ interface AreaDao {
 
     @Query("DELETE FROM Area")
     fun deleteAll()
+
+    @Query("SELECT * FROM Area")
+    fun getFirstArea(): LiveData<Area>
 }

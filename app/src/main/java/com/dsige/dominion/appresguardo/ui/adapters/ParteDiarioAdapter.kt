@@ -32,15 +32,16 @@ class ParteDiarioAdapter(private val listener: OnItemClickListener.ParteDiarioLi
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         internal fun bind(o: ParteDiario, listener: OnItemClickListener.ParteDiarioListener) =
             with(itemView) {
-                textView1.text = o.nroObraTD
+                textView1.text = String.format("N° %s", o.parteDiarioId)
                 textView2.text = o.nombreServicio
-                textView3.text = o.lugarTrabajoPD
-                textView4.text = String.format("J. Coordinador : %s", o.nombreCoordinador)
-                textView5.text = String.format("J. Cuadrilla : %s", o.nombreJefeCuadrilla)
-                textView6.text = when (o.estado) {
-                    1 -> "Pendiente"
+                textView3.text = o.nroObraTD
+                textView4.text = o.lugarTrabajoPD
+                textView5.text = String.format("J. Coordinador : %s", o.nombreCoordinador)
+                textView6.text = String.format("J. Cuadrilla : %s", o.nombreJefeCuadrilla)
+                textView7.text = when (o.estado) {
+                    1 -> "Ejecutado"
                     2 -> "Incompleto"
-                    else -> "Enviado"
+                    else -> "Terminado"
                 }
                 itemView.setOnClickListener { v -> listener.onItemClick(o, v, adapterPosition) }
             }

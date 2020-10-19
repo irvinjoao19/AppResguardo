@@ -191,4 +191,5 @@ class MainFragment : DaggerFragment(), View.OnClickListener, TextView.OnEditorAc
                 }
             }
     }
+
 }

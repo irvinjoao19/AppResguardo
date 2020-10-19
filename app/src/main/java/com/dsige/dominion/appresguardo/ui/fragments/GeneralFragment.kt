@@ -121,6 +121,8 @@ class GeneralFragment : DaggerFragment(), View.OnClickListener {
         editTextHInicio.setText(Util.getHoraActual())
         editTextHTermino.setText(Util.getHoraActual())
 
+        t.parteDiarioId = otId
+
         otViewModel.getOtById(otId).observe(viewLifecycleOwner, {
             if (it != null) {
                 t = it
@@ -134,6 +136,16 @@ class GeneralFragment : DaggerFragment(), View.OnClickListener {
                 editTextLugar.setText(it.lugarTrabajoPD)
                 editTextNro.setText(it.nroObraTD)
                 editTextObs.setText(it.observacionesPD)
+                if (it.estado == 0) {
+                    fabGenerate.visibility = View.GONE
+                }
+            } else {
+                otViewModel.getFirstArea().observe(viewLifecycleOwner, { a ->
+                    if (a != null) {
+                        t.servicioId = a.areaId
+                        editTextArea.setText(a.nombreArea)
+                    }
+                })
             }
         })
 
@@ -291,7 +303,6 @@ class GeneralFragment : DaggerFragment(), View.OnClickListener {
         val gps = Gps(context!!)
         if (gps.isLocationEnabled()) {
             if (gps.latitude.toString() != "0.0" || gps.longitude.toString() != "0.0") {
-                t.parteDiarioId = otId
                 t.usuarioId = usuarioId
                 t.usuarioEfectivoPolicialId = usuarioId
 

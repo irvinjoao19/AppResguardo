@@ -80,6 +80,17 @@ internal constructor(private val roomRepository: AppRepository, private val retr
             mensajeError.value = "Ingresar Fecha"
             return
         }
+
+        if(t.horaInicio.isEmpty()){
+            mensajeError.value = "Ingresar Hora Inicio"
+            return
+        }
+
+        if(t.horaTermino.isEmpty()){
+            mensajeError.value = "Ingresar Hora Termino"
+            return
+        }
+
         if (t.nombreCoordinador.isEmpty()) {
             mensajeError.value = "Seleccione Coordinador"
             return
@@ -120,6 +131,10 @@ internal constructor(private val roomRepository: AppRepository, private val retr
 
     fun getMaxIdOt(): LiveData<Int> {
         return roomRepository.getMaxIdOt()
+    }
+
+    fun getFirstArea() : LiveData<Area>{
+        return roomRepository.getFirstArea()
     }
 
     fun getAreas(): LiveData<List<Area>> {

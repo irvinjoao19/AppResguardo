@@ -94,42 +94,6 @@ internal constructor(private val roomRepository: AppRepository, private val retr
     }
 
     fun logout(login: String) {
-        deleteUser(login)
-//        var mensaje = ""
-//        roomRepository.getLogout(login)
-//            .subscribeOn(Schedulers.io())
-//            .observeOn(AndroidSchedulers.mainThread())
-//            .subscribe(object : Observer<Mensaje> {
-//                override fun onSubscribe(d: Disposable) {
-//
-//                }
-//
-//                override fun onNext(m: Mensaje) {
-//                    mensaje = m.mensaje
-//                }
-//
-//                override fun onError(t: Throwable) {
-//                    if (t is HttpException) {
-//                        val body = t.response().errorBody()
-//                        try {
-//                            val error = retrofit.errorConverter.convert(body!!)
-//                            mensajeError.postValue(error.Message)
-//                        } catch (e1: IOException) {
-//                            e1.printStackTrace()
-//                        }
-//                    } else {
-//                        mensajeError.postValue(t.message)
-//                    }
-//                }
-//
-//                override fun onComplete() {
-//                    deleteUser(mensaje)
-//                }
-//            })
-    }
-
-
-    private fun deleteUser(mensaje: String) {
         roomRepository.deleteSesion()
             .delay(2, TimeUnit.SECONDS)
             .subscribeOn(Schedulers.computation())
@@ -147,6 +111,7 @@ internal constructor(private val roomRepository: AppRepository, private val retr
                 }
             })
     }
+
 
     fun getSync(u: Int, e: Int, p: Int) {
         roomRepository.deleteSync()

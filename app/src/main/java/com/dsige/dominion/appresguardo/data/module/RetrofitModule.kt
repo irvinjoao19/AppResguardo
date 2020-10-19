@@ -61,6 +61,6 @@ class RetrofitModule {
     }
 
     companion object {
-        private val BASE_URL = "http://173.248.174.85/webApiResguardo/api/Resguardo/"
+        private val BASE_URL = "http://www.jualgaseguriti.com/webApiResguardo/api/Resguardo/"
     }
 }

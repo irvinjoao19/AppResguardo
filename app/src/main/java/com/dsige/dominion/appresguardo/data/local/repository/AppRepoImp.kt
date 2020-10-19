@@ -57,8 +57,14 @@ class AppRepoImp(private val apiService: ApiService, private val dataBase: AppDa
 
     override fun deleteSesion(): Completable {
         return Completable.fromAction {
+            dataBase.accesosDao().deleteAll()
+            dataBase.areaDao().deleteAll()
+            dataBase.cargoDao().deleteAll()
+            dataBase.estadoDao().deleteAll()
+            dataBase.parteDiarioDao().deleteAll()
+            dataBase.personalDao().deleteAll()
+            dataBase.tipoDocumentoDao().deleteAll()
             dataBase.usuarioDao().deleteAll()
-
         }
     }
 
@@ -119,6 +125,10 @@ class AppRepoImp(private val apiService: ApiService, private val dataBase: AppDa
 
     override fun getEstados(): LiveData<List<Estado>> {
         return dataBase.estadoDao().getEstados()
+    }
+
+    override fun getFirstArea(): LiveData<Area> {
+        return dataBase.areaDao().getFirstArea()
     }
 
     override fun getAreas(): LiveData<List<Area>> {

@@ -29,6 +29,7 @@ interface AppRepository {
     fun getAccesos(usuarioId: Int): LiveData<List<Accesos>>
 
     fun getEstados(): LiveData<List<Estado>>
+    fun getFirstArea(): LiveData<Area>
     fun getAreas(): LiveData<List<Area>>
     fun getPersonalById(id: Int): LiveData<List<Personal>>
     fun getMaxIdOt(): LiveData<Int>
@@ -45,4 +46,5 @@ interface AppRepository {
     fun getTipoDocumento(): LiveData<List<TipoDocumento>>
     fun getPersonalOtById(otId: Int): LiveData<List<Personal>>
     fun insertPersonal(p: Personal): Completable
+
 }
