@@ -38,11 +38,7 @@ class ParteDiarioAdapter(private val listener: OnItemClickListener.ParteDiarioLi
                 textView4.text = o.lugarTrabajoPD
                 textView5.text = String.format("J. Coordinador : %s", o.nombreCoordinador)
                 textView6.text = String.format("J. Cuadrilla : %s", o.nombreJefeCuadrilla)
-                textView7.text = when (o.estado) {
-                    1 -> "Ejecutado"
-                    2 -> "Incompleto"
-                    else -> "Terminado"
-                }
+                textView7.text = o.nombreEstado
                 itemView.setOnClickListener { v -> listener.onItemClick(o, v, adapterPosition) }
             }
     }

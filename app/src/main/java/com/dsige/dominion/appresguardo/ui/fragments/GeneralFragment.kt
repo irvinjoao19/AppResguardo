@@ -136,7 +136,7 @@ class GeneralFragment : DaggerFragment(), View.OnClickListener {
                 editTextLugar.setText(it.lugarTrabajoPD)
                 editTextNro.setText(it.nroObraTD)
                 editTextObs.setText(it.observacionesPD)
-                if (it.estado == 0) {
+                if (it.estadoId == 6) {
                     fabGenerate.visibility = View.GONE
                 }
             } else {
@@ -322,7 +322,7 @@ class GeneralFragment : DaggerFragment(), View.OnClickListener {
                 t.fechaRegistro = Util.getFecha()
 
                 t.empresaId = empresaId
-                t.estadoId = 4
+                t.estadoId = 5
                 t.estado = 2
                 otViewModel.validateOt(t)
             }

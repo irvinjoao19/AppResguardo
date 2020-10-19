@@ -72,7 +72,7 @@ class FirmFragment : DaggerFragment(), View.OnClickListener {
         otViewModel.getOtById(otId).observe(viewLifecycleOwner, {
             if (it != null) {
                 t = it
-                if (it.estado == 0) {
+                if (it.estadoId == 0) {
                     fabFirma.visibility = View.GONE
                 }
                 when (tipo) {

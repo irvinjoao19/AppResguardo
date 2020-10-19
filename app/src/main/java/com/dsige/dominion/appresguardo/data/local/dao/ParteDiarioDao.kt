@@ -47,7 +47,7 @@ interface ParteDiarioDao {
     @Query("SELECT * FROM ParteDiario WHERE estado =:i")
     fun getAllRegistroTask(i: Int): List<ParteDiario>
 
-    @Query("UPDATE ParteDiario SET identity =:codigoRetorno , estado = 0 , estadoId = 5 WHERE parteDiarioId=:codigoBase")
+    @Query("UPDATE ParteDiario SET identity =:codigoRetorno , estado = 0 , estadoId =6 WHERE parteDiarioId=:codigoBase")
     fun updateEnabledOt(codigoBase: Int, codigoRetorno: Int)
 
     @Query("SELECT * FROM ParteDiario WHERE parteDiarioId =:id")

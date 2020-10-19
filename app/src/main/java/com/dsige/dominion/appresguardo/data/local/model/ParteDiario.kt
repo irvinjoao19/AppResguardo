@@ -37,6 +37,7 @@ open class ParteDiario {
 
     var nombreJefeCuadrilla : String = ""
     var nombreCoordinador : String = ""
+    var nombreEstado : String = ""
 
 
     @Ignore

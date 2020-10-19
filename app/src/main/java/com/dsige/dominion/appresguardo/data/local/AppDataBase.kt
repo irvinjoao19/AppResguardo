@@ -18,7 +18,7 @@ import com.dsige.dominion.appresguardo.data.local.model.*
         Personal::class,
         TipoDocumento::class
     ],
-    version = 4, // version 1 en play store
+    version = 5, // version 1 en play store
     exportSchema = false
 )
 abstract class AppDataBase : RoomDatabase() {
