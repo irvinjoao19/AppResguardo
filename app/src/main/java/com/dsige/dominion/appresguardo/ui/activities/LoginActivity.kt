@@ -16,6 +16,8 @@ import com.dsige.dominion.appresguardo.data.viewModel.UsuarioViewModel
 import com.dsige.dominion.appresguardo.data.viewModel.ViewModelFactory
 import com.dsige.dominion.appresguardo.helper.Permission
 import com.dsige.dominion.appresguardo.helper.Util
+import com.dsige.dominion.appresguardo.ui.services.GpsService
+import com.dsige.dominion.appresguardo.ui.services.MovilService
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.android.support.DaggerAppCompatActivity
 import kotlinx.android.synthetic.main.activity_login.*
@@ -136,8 +138,8 @@ class LoginActivity : DaggerAppCompatActivity(), View.OnClickListener {
     }
 
     private fun goMainActivity() {
-//        startService(Intent(this, GpsService::class.java))
-//        startService(Intent(this, MovilService::class.java))
+        startService(Intent(this, GpsService::class.java))
+        startService(Intent(this, MovilService::class.java))
         startActivity(
             Intent(this, MainActivity::class.java)
                 .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)

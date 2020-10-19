@@ -323,6 +323,7 @@ class GeneralFragment : DaggerFragment(), View.OnClickListener {
 
                 t.empresaId = empresaId
                 t.estadoId = 5
+                t.nombreEstado = "Ejecucion de Parte Diario"
                 t.estado = 2
                 otViewModel.validateOt(t)
             }

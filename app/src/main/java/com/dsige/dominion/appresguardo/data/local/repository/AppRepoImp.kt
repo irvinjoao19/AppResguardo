@@ -206,7 +206,7 @@ class AppRepoImp(private val apiService: ApiService, private val dataBase: AppDa
 
     override fun updateOt(t: Mensaje): Completable {
         return Completable.fromAction {
-            dataBase.parteDiarioDao().updateEnabledOt(t.codigoBase, t.codigoRetorno)
+            dataBase.parteDiarioDao().updateEnabledOt(t.codigoBase, t.codigoRetorno,"Termino de Parte Diario")
         }
     }
 
