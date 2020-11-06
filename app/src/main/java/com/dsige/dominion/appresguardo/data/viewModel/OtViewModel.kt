@@ -1,5 +1,8 @@
 package com.dsige.dominion.appresguardo.data.viewModel
 
+import android.content.Context
+import android.content.Intent
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
@@ -36,7 +39,7 @@ internal constructor(private val roomRepository: AppRepository, private val retr
         mensajeError.value = s
     }
 
-    fun setErrorP(s:String?){
+    fun setErrorP(s: String?) {
         mensajePersonal.value = s
     }
 
@@ -80,17 +83,14 @@ internal constructor(private val roomRepository: AppRepository, private val retr
             mensajeError.value = "Ingresar Fecha"
             return
         }
-
-        if(t.horaInicio.isEmpty()){
+        if (t.horaInicio.isEmpty()) {
             mensajeError.value = "Ingresar Hora Inicio"
             return
         }
-
-        if(t.horaTermino.isEmpty()){
+        if (t.horaTermino.isEmpty()) {
             mensajeError.value = "Ingresar Hora Termino"
             return
         }
-
         if (t.nombreCoordinador.isEmpty()) {
             mensajeError.value = "Seleccione Coordinador"
             return
@@ -133,7 +133,7 @@ internal constructor(private val roomRepository: AppRepository, private val retr
         return roomRepository.getMaxIdOt()
     }
 
-    fun getFirstArea() : LiveData<Area>{
+    fun getFirstArea(): LiveData<Area> {
         return roomRepository.getFirstArea()
     }
 
@@ -180,6 +180,112 @@ internal constructor(private val roomRepository: AppRepository, private val retr
 
     fun getPersonalOtById(otId: Int): LiveData<List<Personal>> {
         return roomRepository.getPersonalOtById(otId)
+    }
+
+    fun deletePhoto(o: ParteDiarioPhoto, context: Context) {
+        roomRepository.deletePhoto(o, context)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(object : CompletableObserver {
+                override fun onComplete() {
+                    mensajeError.value = "Foto Eliminada"
+                }
+
+                override fun onSubscribe(d: Disposable) {
+
+                }
+
+                override fun onError(e: Throwable) {
+
+                }
+            })
+    }
+
+    fun getPhotoById(otId: Int): LiveData<List<ParteDiarioPhoto>> {
+        return roomRepository.getPhotoById(otId)
+    }
+
+    fun generarArchivo(
+        size: Int, usuarioId: Int, context: Context,
+        data: Intent, direccion: String, distrito: String
+    ) {
+        Util.getFolderAdjunto(size, usuarioId, context, data, direccion, distrito)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(object : Observer<ArrayList<String>> {
+                override fun onSubscribe(d: Disposable) {}
+                override fun onNext(t: ArrayList<String>) {
+                    mensajeSuccess.value = t.toString()
+                }
+
+                override fun onError(e: Throwable) {
+                    mensajeError.value = e.message
+                }
+
+                override fun onComplete() {}
+            })
+    }
+
+    fun insertPhoto(f: ParteDiarioPhoto) {
+        roomRepository.insertPhoto(f)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(object : CompletableObserver {
+                override fun onComplete() {
+                    mensajeSuccess.value = "Ok"
+                }
+
+                override fun onSubscribe(d: Disposable) {
+
+                }
+
+                override fun onError(e: Throwable) {
+                    Log.i("TAG", e.toString())
+                }
+            })
+    }
+
+    fun insertMultiPhoto(f: ArrayList<ParteDiarioPhoto>) {
+        roomRepository.insertMultiPhoto(f)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(object : CompletableObserver {
+                override fun onComplete() {
+                    mensajeSuccess.value = "Ok"
+                }
+
+                override fun onSubscribe(d: Disposable) {
+
+                }
+
+                override fun onError(e: Throwable) {
+                    Log.i("TAG", e.toString())
+                }
+            })
+    }
+
+    fun validateRegistro(t: ParteDiario, tipo: String) {
+        if (t.incidencia.isEmpty()) {
+            mensajeError.value = "Ingrese Incidencia"
+            return
+        }
+        updateRegistro(t, tipo)
+    }
+
+    private fun updateRegistro(t: ParteDiario, tipo: String) {
+        roomRepository.updateRegistro(t)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(object : CompletableObserver {
+                override fun onComplete() {
+                    mensajeSuccess.value = tipo
+                }
+
+                override fun onSubscribe(d: Disposable) {}
+                override fun onError(e: Throwable) {
+                    Log.i("TAG", e.toString())
+                }
+            })
     }
 
 }

@@ -16,9 +16,10 @@ import com.dsige.dominion.appresguardo.data.local.model.*
         Estado::class,
         ParteDiario::class,
         Personal::class,
-        TipoDocumento::class
+        TipoDocumento::class,
+        ParteDiarioPhoto::class
     ],
-    version = 1, // version 1 en play store
+    version = 4, // version 1 en play store
     exportSchema = false
 )
 abstract class AppDataBase : RoomDatabase() {
@@ -31,6 +32,7 @@ abstract class AppDataBase : RoomDatabase() {
     abstract fun personalDao(): PersonalDao
     abstract fun tipoDocumentoDao(): TipoDocumentoDao
     abstract fun usuarioDao(): UsuarioDao
+    abstract fun parteDiarioPhotoDao(): ParteDiarioPhotoDao
 
     companion object {
         @Volatile

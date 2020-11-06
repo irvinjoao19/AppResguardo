@@ -18,6 +18,7 @@ abstract class TabLayoutAdapter {
                 0 -> GeneralFragment.newInstance(otId, usuarioId,empresaId)
                 1 -> FirmFragment.newInstance(otId, 1)
                 2 -> FirmFragment.newInstance(otId, 2)
+                3 -> IncidenciaFragment.newInstance(otId,usuarioId)
                 else -> Fragment()
             }
         }

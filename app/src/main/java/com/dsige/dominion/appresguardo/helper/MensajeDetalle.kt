@@ -2,7 +2,7 @@ package com.dsige.dominion.appresguardo.helper
 
 class MensajeDetalle {
 
-    var detalleId: Int = 0
+    var detalleBaseId: Int = 0
     var detalleRetornoId: Int = 0
     var tipo: String = ""
 }

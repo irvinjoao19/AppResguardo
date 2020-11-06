@@ -29,7 +29,9 @@
         android:usesCleartextTraffic="true"
         tools:ignore="AllowBackup,GoogleAppIndexingWarning"
         tools:targetApi="q">
-        <activity android:name=".ui.activities.FirmActivity"></activity>
+        <activity android:name=".ui.activities.CameraActivity"></activity>
+        <activity android:name=".ui.activities.PreviewCameraActivity" />
+        <activity android:name=".ui.activities.FirmActivity" />
         <activity android:name=".ui.activities.FormActivity" />
         <activity android:name=".ui.activities.LoginActivity" />
         <activity android:name=".ui.activities.MainActivity">

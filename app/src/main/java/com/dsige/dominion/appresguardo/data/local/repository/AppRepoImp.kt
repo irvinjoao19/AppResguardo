@@ -1,5 +1,6 @@
 package com.dsige.dominion.appresguardo.data.local.repository
 
+import android.content.Context
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.paging.Config
@@ -9,6 +10,7 @@ import com.dsige.dominion.appresguardo.data.local.model.*
 import com.dsige.dominion.appresguardo.helper.Mensaje
 import com.google.gson.Gson
 import com.dsige.dominion.appresguardo.data.local.AppDataBase
+import com.dsige.dominion.appresguardo.helper.MensajeDetalle
 import com.dsige.dominion.appresguardo.helper.Util
 import io.reactivex.Completable
 import io.reactivex.Observable
@@ -190,6 +192,8 @@ class AppRepoImp(private val apiService: ApiService, private val dataBase: AppDa
                 for (r: ParteDiario in v) {
                     r.personals =
                         dataBase.personalDao().getPersonalByOt(r.parteDiarioId)
+                    r.photos =
+                        dataBase.parteDiarioPhotoDao().getParteDiarioPhotoByOt(r.parteDiarioId)
                     list.add(r)
                 }
                 e.onNext(list)
@@ -206,7 +210,14 @@ class AppRepoImp(private val apiService: ApiService, private val dataBase: AppDa
 
     override fun updateOt(t: Mensaje): Completable {
         return Completable.fromAction {
-            dataBase.parteDiarioDao().updateEnabledOt(t.codigoBase, t.codigoRetorno,"Termino de Parte Diario")
+            dataBase.parteDiarioDao()
+                .updateEnabledOt(t.codigoBase, t.codigoRetorno, "Termino de Parte Diario")
+            val detalle: List<MensajeDetalle>? = t.detalle
+            if (detalle != null) {
+                for (d: MensajeDetalle in detalle) {
+                    dataBase.parteDiarioPhotoDao().updateEnabledPhoto(d.detalleBaseId,d.detalleRetornoId)
+                }
+            }
         }
     }
 
@@ -226,6 +237,42 @@ class AppRepoImp(private val apiService: ApiService, private val dataBase: AppDa
             } else {
                 Throwable("Nro Documento existe volver a ingresar")
             }
+        }
+    }
+
+    override fun deletePhoto(o: ParteDiarioPhoto, context: Context): Completable {
+        return Completable.fromAction {
+            Util.deletePhoto(o.fotoUrl, context)
+            dataBase.parteDiarioPhotoDao().deleteParteDiarioPhotoTask(o)
+        }
+    }
+
+    override fun getPhotoById(otId: Int): LiveData<List<ParteDiarioPhoto>> {
+        return dataBase.parteDiarioPhotoDao().getParteDiarioPhotoById(otId)
+    }
+
+    override fun insertPhoto(f: ParteDiarioPhoto): Completable {
+        return Completable.fromAction {
+            val p: ParteDiarioPhoto? = dataBase.parteDiarioPhotoDao().getOtPhotoName(f.fotoUrl)
+            if (p == null)
+                dataBase.parteDiarioPhotoDao().insertParteDiarioPhotoTask(f)
+        }
+    }
+
+    override fun insertMultiPhoto(f: ArrayList<ParteDiarioPhoto>): Completable {
+        return Completable.fromAction {
+            for (photos: ParteDiarioPhoto in f) {
+                val p: ParteDiarioPhoto? =
+                    dataBase.parteDiarioPhotoDao().getOtPhotoName(photos.fotoUrl)
+                if (p == null)
+                    dataBase.parteDiarioPhotoDao().insertParteDiarioPhotoTask(photos)
+            }
+        }
+    }
+
+    override fun updateRegistro(t: ParteDiario): Completable {
+        return Completable.fromAction {
+            dataBase.parteDiarioDao().updateParteDiarioTask(t)
         }
     }
 }

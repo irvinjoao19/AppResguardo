@@ -4,9 +4,11 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
+import android.content.ClipData
 import android.content.Context
 import android.content.Context.MODE_PRIVATE
 import android.content.Intent
+import android.database.Cursor
 import android.graphics.*
 import android.location.Address
 import android.location.Geocoder
@@ -27,6 +29,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.exifinterface.media.ExifInterface
+import com.dsige.dominion.appresguardo.R
 import com.google.android.gms.maps.model.BitmapDescriptor
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
@@ -34,7 +37,6 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
-import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Observer
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -51,9 +53,7 @@ import kotlin.math.*
 
 object Util {
 
-    val FolderImg = "Dsige/Lds"
     val UrlFoto = "http://www.dsige.com/webApiDsigeVehiculo/fotos/"
-
     private var FechaActual: String? = ""
     private var date: Date? = null
 
@@ -535,8 +535,8 @@ object Util {
         mSnackbar.show()
     }
 
-    fun toastMensaje(context: Context, mensaje: String) {
-        Toast.makeText(context, mensaje, Toast.LENGTH_LONG).show()
+    fun toastMensaje(context: Context, mensaje: String,b:Boolean) {
+        Toast.makeText(context, mensaje, if (b) Toast.LENGTH_LONG else Toast.LENGTH_SHORT).show()
     }
 
     fun dialogMensaje(context: Context, title: String, mensaje: String) {
@@ -790,7 +790,9 @@ object Util {
         }
     }
 
-    fun getAngleImage(photoPath: String): String {
+    fun getAngleImage(
+        context: Context, photoPath: String, direccion: String, distrito: String
+    ): String {
         try {
             val ei = ExifInterface(photoPath)
             val orientation =
@@ -805,8 +807,7 @@ object Util {
                 ExifInterface.ORIENTATION_UNDEFINED -> 0
                 else -> 90
             }
-
-            return rotateNewImage(degree, photoPath)
+            return rotateNewImage(context, degree, photoPath, direccion, distrito)
 
         } catch (e: Exception) {
             e.printStackTrace()
@@ -815,23 +816,24 @@ object Util {
         return photoPath
     }
 
-    private fun rotateNewImage(degree: Int, imagePath: String): String {
-        if (degree <= 0) {
-            shrinkBitmapOnlyReduceCamera2(imagePath)
-            return imagePath
-        }
+    private fun rotateNewImage(
+        context: Context, degree: Int, imagePath: String, direccion: String, distrito: String
+    ): String {
         try {
-
             var b: Bitmap? = BitmapFactory.decodeFile(imagePath)
             val matrix = Matrix()
-            if (b!!.width > b.height) {
-                matrix.setRotate(degree.toFloat())
-                b = Bitmap.createBitmap(b, 0, 0, b.width, b.height, matrix, true)
-                b = processingBitmapSetDateTime(
-                    b,
-                    getDateTimeFormatString(Date(File(imagePath).lastModified()))
-                )
-            }
+//            if (b!!.width > b.height) {
+            matrix.setRotate(degree.toFloat())
+//                b = Bitmap.createBitmap(b, 0, 0, 480, 640, matrix, true)
+            b = Bitmap.createBitmap(b!!, 0, 0, b.width, b.height, matrix, true)
+            val text = String.format(
+                "%s\n%s\n%s",
+                getDateTimeFormatString(Date(File(imagePath).lastModified())),
+                direccion,
+                distrito
+            )
+            b = drawTextToBitmap(context, b, text)
+//            }
 
             val fOut = FileOutputStream(imagePath)
             val imageName = imagePath.substring(imagePath.lastIndexOf("/") + 1)
@@ -855,6 +857,54 @@ object Util {
         }
 
         return imagePath
+    }
+
+    private fun drawTextToBitmap(
+        gContext: Context,
+        b: Bitmap,
+        gText: String
+    ): Bitmap? {
+        var bitmap = b
+        var bitmapConfig = bitmap.config
+
+        // set default bitmap config if none
+        if (bitmapConfig == null) {
+            bitmapConfig = Bitmap.Config.ARGB_8888
+        }
+        // resource bitmaps are imutable,
+        // so we need to convert it to mutable one
+        bitmap = bitmap.copy(bitmapConfig, true)
+        val canvas = Canvas(bitmap)
+        // new antialised Paint
+        val paint = Paint(Paint.ANTI_ALIAS_FLAG)
+        // text color - #3D3D3D
+        paint.color = Color.WHITE
+        // text size in pixels
+        paint.textSize = 18f
+        // text shadow
+        paint.setShadowLayer(1f, 0f, 1f, Color.WHITE)
+
+        // draw text to the Canvas center
+        val bounds = Rect()
+        var noOfLines = 0
+        for (line in gText.split("\n").toTypedArray()) {
+            noOfLines++
+        }
+        paint.getTextBounds(gText, 0, gText.length, bounds)
+        val x = 20
+        var y: Float = (bitmap.height - bounds.height() * noOfLines).toFloat()
+        val mPaint = Paint()
+        mPaint.color = ContextCompat.getColor(gContext, R.color.transparentBlack)
+        val left = 0
+        val top = bitmap.height - bounds.height() * (noOfLines + 1)
+        val right = bitmap.width
+        val bottom = bitmap.height
+        canvas.drawRect(left.toFloat(), top.toFloat(), right.toFloat(), bottom.toFloat(), mPaint)
+        for (line in gText.split("\n").toTypedArray()) {
+            canvas.drawText(line, x.toFloat(), y, paint)
+            y += paint.descent() - paint.ascent()
+        }
+        return bitmap
     }
 
     fun getLocationName(
@@ -896,28 +946,71 @@ object Util {
                     }
                 })
         } catch (e: IOException) {
-            toastMensaje(context, e.toString())
+            toastMensaje(context, e.toString(),true)
             progressBar.visibility = View.GONE
         }
     }
 
     fun getFolderAdjunto(
-        file: String, context: Context, data: Intent
-    ): Completable {
-        return Completable.fromAction {
-            val imagepath = getFolder(context).toString() + "/" + file
-            val f = File(imagepath)
-            if (!f.exists()) {
-                try {
-                    val success = f.createNewFile()
-                    if (success) {
-                        Log.i("TAG", "FILE CREATED")
+        size: Int, usuarioId: Int, context: Context, data: Intent,
+        direccion: String, distrito: String
+    ): Observable<ArrayList<String>> {
+        return Observable.create {
+            val imagesEncodedList = ArrayList<String>()
+            if (data.clipData != null) {
+                val mClipData: ClipData? = data.clipData
+                val cantidad = mClipData!!.itemCount
+                if (cantidad > size) {
+                    it.onError(Throwable("No puedes seleccionar mas de $size Imagenes"))
+                    it.onComplete()
+                    return@create
+                }
+
+                for (i in 0 until mClipData.itemCount) {
+                    val item: ClipData.Item = mClipData.getItemAt(i)
+                    val uri: Uri = item.uri
+                    val file = getFechaActualForPhoto(usuarioId)
+                    val imagepath = getFolder(context).toString() + "/" + file
+                    val f = File(imagepath)
+                    if (!f.exists()) {
+                        try {
+                            val success = f.createNewFile()
+                            if (success) {
+                                Log.i("TAG", "FILE CREATED")
+                            }
+                            copyFile(File(getImageFilePath(context, uri)), f)
+                            getAngleImage(context, imagepath, direccion, distrito)
+                            imagesEncodedList.add(file)
+                        } catch (e: IOException) {
+                            e.printStackTrace()
+                        }
                     }
-                    copyFile(File(getRealPathFromURI(context, data.data!!)), f)
-//                    shrinkBitmapOnlyReduceCamera2(imagepath)
-                    getAngleImage(imagepath)
-                } catch (e: IOException) {
-                    e.printStackTrace()
+                }
+                it.onNext(imagesEncodedList)
+                it.onComplete()
+                return@create
+            } else {
+                if (data.data != null) {
+                    val file = getFechaActualForPhoto(usuarioId)
+                    val imagepath = getFolder(context).toString() + "/" + file
+                    val f = File(imagepath)
+                    if (!f.exists()) {
+                        try {
+                            val success = f.createNewFile()
+                            if (success) {
+                                Log.i("TAG", "FILE CREATED")
+                            }
+                            copyFile(File(getImageFilePath(context, data.data!!)), f)
+//                            copyFile(File(getRealPathFromURI(context, data.data!!)), f)
+                            getAngleImage(context, imagepath, direccion, distrito)
+                            imagesEncodedList.add(file)
+                        } catch (e: IOException) {
+                            e.printStackTrace()
+                        }
+                    }
+                    it.onNext(imagesEncodedList)
+                    it.onComplete()
+                    return@create
                 }
             }
         }
@@ -943,5 +1036,31 @@ object Util {
 
         val result = SimpleDateFormat("HH:mm")
         return result.format(c.time)
+    }
+
+    private fun getImageFilePath(context: Context, uri: Uri): String {
+        var path = ""
+        var image_id: String? = null
+        val cursor: Cursor? = context.contentResolver.query(uri, null, null, null, null)
+        if (cursor != null) {
+            cursor.moveToFirst()
+            image_id = cursor.getString(0)
+            image_id = image_id.substring(image_id.lastIndexOf(":") + 1)
+            cursor.close()
+        }
+
+        val cursor2: Cursor? = context.contentResolver.query(
+            MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+            null,
+            MediaStore.Images.Media._ID + " = ? ",
+            arrayOf(image_id),
+            null
+        )
+        if (cursor2 != null) {
+            cursor2.moveToFirst()
+            path = cursor2.getString(cursor2.getColumnIndex(MediaStore.Images.Media.DATA))
+            cursor2.close()
+        }
+        return path
     }
 }

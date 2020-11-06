@@ -110,7 +110,7 @@ class MainActivity : DaggerAppCompatActivity(), NavigationView.OnNavigationItemS
             "Sincronizar" -> dialogFunction(
                 1, "Se elimiran todos tus avances deseas volver a sincronizar ?"
             )
-            "Lista de Partes de Trabajo" -> changeFragment(
+            "Lista de Parte Diario" -> changeFragment(
                 MainFragment.newInstance(usuarioId, empresaId), item.title.toString()
             )
             "Enviar Pendientes" -> dialogFunction(2, "Deseas enviar registros ?")
@@ -156,7 +156,7 @@ class MainActivity : DaggerAppCompatActivity(), NavigationView.OnNavigationItemS
                 R.id.content_frame, MainFragment.newInstance(usuarioId, empresaId)
             )
             .commit()
-        supportActionBar!!.title = "Reparación de Veredas"
+        supportActionBar!!.title = "Lista de Parte Diario"
 //        navigationView.menu.getItem(1).isChecked = true
     }
 
@@ -190,7 +190,7 @@ class MainActivity : DaggerAppCompatActivity(), NavigationView.OnNavigationItemS
                     intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                     startActivity(intent)
                 } else {
-                    Util.toastMensaje(this, s)
+                    Util.toastMensaje(this, s,false)
                 }
             }
         })

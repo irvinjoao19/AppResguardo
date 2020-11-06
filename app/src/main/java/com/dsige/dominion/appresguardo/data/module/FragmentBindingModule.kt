@@ -20,6 +20,9 @@ abstract class FragmentBindingModule {
 
         @ContributesAndroidInjector
         internal abstract fun providFirmFragment(): FirmFragment
+
+        @ContributesAndroidInjector
+        internal abstract fun providIncidenciaFragment(): IncidenciaFragment
     }
 
 }

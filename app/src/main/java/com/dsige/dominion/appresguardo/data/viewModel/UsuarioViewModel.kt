@@ -216,6 +216,23 @@ internal constructor(private val roomRepository: AppRepository, private val retr
                     }
                 }
 
+                val detalles: List<ParteDiarioPhoto>? = a.photos
+                if (detalles != null) {
+                    for (d: ParteDiarioPhoto in detalles) {
+                        if (d.fotoUrl.isNotEmpty()) {
+                            val file = File(Util.getFolder(context), d.fotoUrl)
+                            if (file.exists()) {
+                                b.addFormDataPart(
+                                    "files", file.name,
+                                    RequestBody.create(
+                                        MediaType.parse("multipart/form-data"), file
+                                    )
+                                )
+                            }
+                        }
+                    }
+                }
+
                 val json = Gson().toJson(a)
                 Log.i("TAG", json)
                 b.setType(MultipartBody.FORM)
@@ -223,8 +240,7 @@ internal constructor(private val roomRepository: AppRepository, private val retr
 
                 val body = b.build()
                 Observable.zip(
-                    Observable.just(a), roomRepository.sendRegistroOt(body),
-                    BiFunction<ParteDiario, Mensaje, Mensaje> { _, mensaje ->
+                    Observable.just(a), roomRepository.sendRegistroOt(body), { _, mensaje ->
                         mensaje
                     })
             }

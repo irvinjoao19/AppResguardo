@@ -1,7 +1,5 @@
 package com.dsige.dominion.appresguardo.ui.activities
 
-import android.graphics.Insets
-import android.os.Build
 import android.os.Bundle
 import android.util.DisplayMetrics
 import android.view.*
@@ -31,7 +29,7 @@ class FirmActivity : DaggerAppCompatActivity(), View.OnClickListener {
                     }
                     otViewModel.validateOt(p)
                 } else {
-                    Util.toastMensaje(this, "Debes de Firmar")
+                    Util.toastMensaje(this, "Debes de Firmar",true)
                 }
             }
         }
@@ -100,11 +98,11 @@ class FirmActivity : DaggerAppCompatActivity(), View.OnClickListener {
         })
 
         otViewModel.mensajeError.observe(this, { m ->
-            Util.toastMensaje(this, m)
+            Util.toastMensaje(this, m,false)
         })
 
         otViewModel.mensajeSuccess.observe(this, { m ->
-            Util.toastMensaje(this, m)
+            Util.toastMensaje(this, m,false)
             finish()
         })
     }

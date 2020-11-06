@@ -68,4 +68,9 @@ class DataBaseModule {
     internal fun provideUsuarioDao(appDataBase: AppDataBase): UsuarioDao {
         return appDataBase.usuarioDao()
     }
+
+    @Provides
+    internal fun provideParteDiarioPhotoDao(appDataBase: AppDataBase): ParteDiarioPhotoDao {
+        return appDataBase.parteDiarioPhotoDao()
+    }
 }

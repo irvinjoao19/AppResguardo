@@ -142,7 +142,7 @@ class MainFragment : DaggerFragment(), View.OnClickListener, TextView.OnEditorAc
         fab.setOnClickListener(this)
 
         otViewModel.mensajeError.observe(viewLifecycleOwner, {
-            Util.toastMensaje(context!!, it)
+            Util.toastMensaje(context!!, it,false)
         })
     }
 
@@ -191,5 +191,4 @@ class MainFragment : DaggerFragment(), View.OnClickListener, TextView.OnEditorAc
                 }
             }
     }
-
 }

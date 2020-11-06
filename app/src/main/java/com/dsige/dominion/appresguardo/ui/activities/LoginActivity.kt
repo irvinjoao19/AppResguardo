@@ -107,7 +107,7 @@ class LoginActivity : DaggerAppCompatActivity(), View.OnClickListener {
         usuarioViewModel.mensajeError.observe(this, { s ->
             if (s != null) {
                 closeLoad()
-                Util.toastMensaje(this, s)
+                Util.toastMensaje(this, s,false)
             }
         })
         usuarioViewModel.mensajeSuccess.observe(this, { s ->

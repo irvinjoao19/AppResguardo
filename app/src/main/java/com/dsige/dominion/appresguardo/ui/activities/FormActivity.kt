@@ -31,6 +31,7 @@ class FormActivity : DaggerAppCompatActivity() {
         tabLayout.addTab(tabLayout.newTab().setText(R.string.tab1))
         tabLayout.addTab(tabLayout.newTab().setText(R.string.tab2))
         tabLayout.addTab(tabLayout.newTab().setText(R.string.tab3))
+        tabLayout.addTab(tabLayout.newTab().setText(R.string.tab4))
 
         val tabLayoutAdapter =
             TabLayoutAdapter.TabLayoutForm(

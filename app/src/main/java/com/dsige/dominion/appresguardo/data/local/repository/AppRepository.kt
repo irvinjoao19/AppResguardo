@@ -1,5 +1,6 @@
 package com.dsige.dominion.appresguardo.data.local.repository
 
+import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.paging.PagedList
 import com.dsige.dominion.appresguardo.data.local.model.*
@@ -46,5 +47,11 @@ interface AppRepository {
     fun getTipoDocumento(): LiveData<List<TipoDocumento>>
     fun getPersonalOtById(otId: Int): LiveData<List<Personal>>
     fun insertPersonal(p: Personal): Completable
+
+    fun deletePhoto(o: ParteDiarioPhoto, context: Context): Completable
+    fun getPhotoById(otId: Int): LiveData<List<ParteDiarioPhoto>>
+    fun insertPhoto(f: ParteDiarioPhoto): Completable
+    fun insertMultiPhoto(f: ArrayList<ParteDiarioPhoto>): Completable
+    fun updateRegistro(t: ParteDiario): Completable
 
 }

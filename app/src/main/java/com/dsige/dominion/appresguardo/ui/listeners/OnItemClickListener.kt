@@ -27,4 +27,12 @@ interface OnItemClickListener {
     interface TipoDocumentoListener {
         fun onItemClick(t: TipoDocumento, view: View, position: Int)
     }
+
+    interface PhotoListener {
+        fun onItemClick(p: ParteDiarioPhoto, view: View, position: Int)
+    }
+
+    interface OtMultiPhotoListener {
+        fun onItemClick(s: String, view: View, position: Int)
+    }
 }
