@@ -9,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
+import androidx.viewpager.widget.ViewPager
 import com.dsige.dominion.appresguardo.R
 import com.dsige.dominion.appresguardo.data.local.model.ParteDiario
 import com.dsige.dominion.appresguardo.data.viewModel.OtViewModel
@@ -42,6 +43,7 @@ class FirmFragment : DaggerFragment(), View.OnClickListener {
     @Inject
     lateinit var viewModelFactory: ViewModelFactory
     lateinit var otViewModel: OtViewModel
+    private var viewPager: ViewPager? = null
     lateinit var t: ParteDiario
     private var otId: Int = 0
     private var tipo: Int = 0
@@ -67,6 +69,7 @@ class FirmFragment : DaggerFragment(), View.OnClickListener {
     }
 
     private fun bindUI() {
+        viewPager = activity!!.findViewById(R.id.viewPager)
         otViewModel =
             ViewModelProvider(this, viewModelFactory).get(OtViewModel::class.java)
         otViewModel.getOtById(otId).observe(viewLifecycleOwner, {
@@ -78,10 +81,12 @@ class FirmFragment : DaggerFragment(), View.OnClickListener {
                 when (tipo) {
                     1 -> if (it.firmaEfectivoPolicial.isNotEmpty()) {
                         getFirma(it.firmaEfectivoPolicial)
+                        viewPager?.currentItem = 2
                         return@observe
                     }
                     2 -> if (it.firmaJefeCuadrilla.isNotEmpty()) {
                         getFirma(it.firmaJefeCuadrilla)
+                        viewPager?.currentItem = 3
                         return@observe
                     }
                 }
@@ -89,6 +94,11 @@ class FirmFragment : DaggerFragment(), View.OnClickListener {
         })
 
         fabFirma.setOnClickListener(this)
+
+        otViewModel.mensajeSuccess.observe(viewLifecycleOwner, {
+
+            Util.toastMensaje(context!!, it, false)
+        })
 
         otViewModel.mensajeError.observe(viewLifecycleOwner, { m ->
             Util.snackBarMensaje(view!!, m)
@@ -104,10 +114,12 @@ class FirmFragment : DaggerFragment(), View.OnClickListener {
                     .into(imgFirma, object : Callback {
                         override fun onSuccess() {
                             progressBar.visibility = View.GONE
+                            textViewFirma.visibility = View.GONE
                         }
 
                         override fun onError(e: Exception?) {
-                            Log.i("TAG", e.toString())
+                            progressBar.visibility = View.GONE
+                            textViewFirma.visibility = View.GONE
                         }
                     })
             }, 1000)

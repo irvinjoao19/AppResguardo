@@ -91,9 +91,7 @@ class GeneralFragment : DaggerFragment(), View.OnClickListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         t = ParteDiario()
-
         arguments?.let {
             otId = it.getInt(ARG_PARAM1)
             usuarioId = it.getInt(ARG_PARAM2)
@@ -179,12 +177,12 @@ class GeneralFragment : DaggerFragment(), View.OnClickListener {
 
         otViewModel.mensajeError.observe(viewLifecycleOwner, {
             //closeLoad()
-            Util.toastMensaje(context!!, it,false)
+            Util.toastMensaje(context!!, it, false)
         })
 
         otViewModel.mensajeSuccess.observe(viewLifecycleOwner, {
             viewPager?.currentItem = 1
-            Util.toastMensaje(context!!, it,false)
+            Util.toastMensaje(context!!, it, false)
         })
     }
 
@@ -280,7 +278,7 @@ class GeneralFragment : DaggerFragment(), View.OnClickListener {
         try {
             startActivityForResult(intent, permission)
         } catch (a: ActivityNotFoundException) {
-            Util.toastMensaje(context!!, "Dispositivo no compatible para esta opción",false)
+            Util.toastMensaje(context!!, "Dispositivo no compatible para esta opción", false)
         }
     }
 
@@ -368,7 +366,7 @@ class GeneralFragment : DaggerFragment(), View.OnClickListener {
                 if (it == "ok") {
                     dialog.dismiss()
                 } else {
-                    Util.toastMensaje(context!!, it,false)
+                    Util.toastMensaje(context!!, it, false)
                 }
             }
         })

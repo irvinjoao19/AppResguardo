@@ -13,6 +13,15 @@
         android:layout_gravity="center"
         android:contentDescription="@string/img" />
 
+    <TextView
+        android:id="@+id/textViewFirma"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="Debes de Firmar"
+        android:textSize="18sp"
+        android:textStyle="bold" />
+
     <ProgressBar
         android:id="@+id/progressBar"
         android:layout_width="wrap_content"
