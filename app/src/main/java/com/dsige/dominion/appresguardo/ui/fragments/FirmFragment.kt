@@ -96,7 +96,6 @@ class FirmFragment : DaggerFragment(), View.OnClickListener {
         fabFirma.setOnClickListener(this)
 
         otViewModel.mensajeSuccess.observe(viewLifecycleOwner, {
-
             Util.toastMensaje(context!!, it, false)
         })
 
@@ -106,23 +105,23 @@ class FirmFragment : DaggerFragment(), View.OnClickListener {
     }
 
     private fun getFirma(s: String) {
-        progressBar.visibility = View.VISIBLE
         Looper.myLooper()?.let {
             Handler(it).postDelayed({
-                val f = File(Util.getFolder(context!!), s)
-                Picasso.get().load(f)
-                    .into(imgFirma, object : Callback {
-                        override fun onSuccess() {
-                            progressBar.visibility = View.GONE
-                            textViewFirma.visibility = View.GONE
-                        }
+                try {
+                    val f = File(Util.getFolder(context!!), s)
+                    Picasso.get().load(f)
+                        .into(imgFirma, object : Callback {
+                            override fun onSuccess() {
+                                textViewFirma?.visibility = View.GONE
+                            }
 
-                        override fun onError(e: Exception?) {
-                            progressBar.visibility = View.GONE
-                            textViewFirma.visibility = View.GONE
-                        }
-                    })
-            }, 1000)
+                            override fun onError(e: Exception?) {
+                                textViewFirma?.visibility = View.GONE
+                            }
+                        })
+                } catch (e: Exception) {
+                }
+            }, 500)
         }
     }
 

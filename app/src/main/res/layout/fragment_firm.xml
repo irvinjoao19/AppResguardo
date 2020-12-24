@@ -22,13 +22,6 @@
         android:textSize="18sp"
         android:textStyle="bold" />
 
-    <ProgressBar
-        android:id="@+id/progressBar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:visibility="gone" />
-
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fabFirma"
         style="@style/Widget.MaterialComponents.FloatingActionButton"
