@@ -51,9 +51,11 @@ class GeneralFragment : DaggerFragment(), View.OnClickListener {
 
     override fun onClick(v: View) {
         when (v.id) {
-            R.id.editTextFecha -> Util.getDateDialog(context!!, editTextFecha)
-            R.id.editTextHInicio -> Util.getHourDialog(context!!, editTextHInicio)
-            R.id.editTextHTermino -> Util.getHourDialog(context!!, editTextHTermino)
+            R.id.editTextFecha -> Util.getDateDialog(requireContext(), editTextFecha)
+            R.id.editTextFInicio -> Util.getDateDialog(requireContext(), editTextFInicio)
+            R.id.editTextFTermino -> Util.getDateDialog(requireContext(), editTextFTermino)
+            R.id.editTextHInicio -> Util.getHourDialog(requireContext(), editTextHInicio)
+            R.id.editTextHTermino -> Util.getHourDialog(requireContext(), editTextHTermino)
             R.id.editTextArea -> spinnerDialog(1, "Area")
             R.id.editTextCoordinador -> spinnerDialog(5, "Coordinador")
             R.id.editTextCuadrilla -> spinnerDialog(6, "Jefe de Cuadrilla")
@@ -134,6 +136,13 @@ class GeneralFragment : DaggerFragment(), View.OnClickListener {
                 editTextLugar.setText(it.lugarTrabajoPD)
                 editTextNro.setText(it.nroObraTD)
                 editTextObs.setText(it.observacionesPD)
+
+                if (it.fechaInicioPD != "01/01/1900") {
+                    editTextFInicio.setText(it.fechaInicioPD)
+                }
+                if (it.fechaFinPD != "01/01/1900") {
+                    editTextFTermino.setText(it.fechaFinPD)
+                }
                 if (it.estadoId == 6) {
                     fabGenerate.visibility = View.GONE
                 }
@@ -160,7 +169,8 @@ class GeneralFragment : DaggerFragment(), View.OnClickListener {
                 }
             }
         })
-
+        editTextFInicio.setOnClickListener(this)
+        editTextFTermino.setOnClickListener(this)
         editTextFecha.setOnClickListener(this)
         editTextHInicio.setOnClickListener(this)
         editTextHTermino.setOnClickListener(this)
@@ -318,6 +328,9 @@ class GeneralFragment : DaggerFragment(), View.OnClickListener {
                 t.latitud = gps.latitude.toString()
                 t.longitud = gps.longitude.toString()
                 t.fechaRegistro = Util.getFecha()
+
+                t.fechaInicioPD = editTextFInicio.text.toString()
+                t.fechaFinPD = editTextFTermino.text.toString()
 
                 t.empresaId = empresaId
                 t.estadoId = 5

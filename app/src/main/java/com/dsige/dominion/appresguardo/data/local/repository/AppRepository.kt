@@ -54,4 +54,10 @@ interface AppRepository {
     fun insertMultiPhoto(f: ArrayList<ParteDiarioPhoto>): Completable
     fun updateRegistro(t: ParteDiario): Completable
 
+
+    //nuevo envio
+    fun getOtFile(i: Int): Observable<List<String>>
+    fun sendFile(body:RequestBody) : Observable<String>
+    fun saveParteDiario(body:RequestBody) : Observable<Mensaje>
+
 }

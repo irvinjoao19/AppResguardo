@@ -32,6 +32,8 @@ open class ParteDiario {
     var identity: Int = 0
     var usuarioId: Int = 0
     var incidencia: String = ""
+    var fechaInicioPD: String = ""
+    var fechaFinPD: String = ""
 
     var estadoId: Int = 0 // 4 -> ejecutado  // 5 enviado aprobar
     var estado: Int = 0 // 1 -> para enviar , 2 -> incompleto
@@ -39,7 +41,6 @@ open class ParteDiario {
     var nombreJefeCuadrilla: String = ""
     var nombreCoordinador: String = ""
     var nombreEstado: String = ""
-
 
     @Ignore
     var personals: List<Personal> = ArrayList()

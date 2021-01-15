@@ -83,6 +83,14 @@ internal constructor(private val roomRepository: AppRepository, private val retr
             mensajeError.value = "Ingresar Fecha"
             return
         }
+        if (t.fechaInicioPD.isEmpty()) {
+            mensajeError.value = "Ingresar Fecha Inicio"
+            return
+        }
+        if (t.fechaFinPD.isEmpty()) {
+            mensajeError.value = "Ingresar Fecha Termino"
+            return
+        }
         if (t.horaInicio.isEmpty()) {
             mensajeError.value = "Ingresar Hora Inicio"
             return

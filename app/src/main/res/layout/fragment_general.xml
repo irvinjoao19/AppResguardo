@@ -51,7 +51,7 @@
         </com.google.android.material.textfield.TextInputLayout>
 
         <LinearLayout
-            android:id="@+id/layout3"
+            android:id="@+id/layout9"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
@@ -67,7 +67,53 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="4dp"
                 android:layout_weight="0.3"
-                android:hint="Inicio">
+                android:hint="Fecha Inicio">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/editTextFInicio"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:drawableEnd="@drawable/ic_date"
+                    android:focusable="false"
+                    android:textColor="@color/colorAccent" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="4dp"
+                android:layout_weight="0.3"
+                android:hint="Fecha Final">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/editTextFTermino"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:drawableEnd="@drawable/ic_date"
+                    android:focusable="false"
+                    android:textColor="@color/colorAccent" />
+            </com.google.android.material.textfield.TextInputLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/layout3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:baselineAligned="false"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/layout9">
+
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="4dp"
+                android:layout_weight="0.3"
+                android:hint="Hora Inicio">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/editTextHInicio"
@@ -84,7 +130,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="4dp"
                 android:layout_weight="0.3"
-                android:hint="Final">
+                android:hint="Hora Final">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/editTextHTermino"

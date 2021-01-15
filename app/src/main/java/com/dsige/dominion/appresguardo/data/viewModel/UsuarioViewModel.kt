@@ -189,58 +189,64 @@ internal constructor(private val roomRepository: AppRepository, private val retr
     }
 
     fun sendData(context: Context) {
+        roomRepository.getOtFile(1).flatMap { observable ->
+            Observable.fromIterable(observable).flatMap { a ->
+                val b = MultipartBody.Builder()
+                val file = File(Util.getFolder(context), a)
+                if (file.exists()) {
+                    b.addFormDataPart(
+                        "files", file.name,
+                        RequestBody.create(
+                            MediaType.parse("multipart/form-data"), file
+                        )
+                    )
+                }
+                b.setType(MultipartBody.FORM)
+                val body = b.build()
+                Observable.zip(
+                    Observable.just(a), roomRepository.sendFile(body), { _, mensaje ->
+                        mensaje
+                    })
+            }
+        }.subscribeOn(Schedulers.io())
+            .delay(1000, TimeUnit.MILLISECONDS)
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(object : Observer<String> {
+                override fun onSubscribe(d: Disposable) {}
+                override fun onNext(t: String) {
+                    Log.i("tag", t)
+                }
+
+                override fun onError(t: Throwable) {
+                    if (t is HttpException) {
+                        val body = t.response().errorBody()
+                        try {
+                            val error = retrofit.errorConverter.convert(body!!)
+                            mensajeError.postValue(error.Message)
+                        } catch (e1: IOException) {
+                            e1.printStackTrace()
+                        }
+                    } else {
+                        mensajeError.postValue(t.message)
+                    }
+                }
+
+                override fun onComplete() {
+                    sendParteDiario()
+                }
+            })
+    }
+
+    private fun sendParteDiario() {
         val ots: Observable<List<ParteDiario>> = roomRepository.getSendOt(1)
         ots.flatMap { observable ->
             Observable.fromIterable(observable).flatMap { a ->
-                val b = MultipartBody.Builder()
-                if (a.firmaEfectivoPolicial.isNotEmpty()) {
-                    val file = File(Util.getFolder(context), a.firmaEfectivoPolicial)
-                    if (file.exists()) {
-                        b.addFormDataPart(
-                            "files", file.name,
-                            RequestBody.create(
-                                MediaType.parse("multipart/form-data"), file
-                            )
-                        )
-                    }
-                }
-                if (a.firmaJefeCuadrilla.isNotEmpty()) {
-                    val file = File(Util.getFolder(context), a.firmaJefeCuadrilla)
-                    if (file.exists()) {
-                        b.addFormDataPart(
-                            "files", file.name,
-                            RequestBody.create(
-                                MediaType.parse("multipart/form-data"), file
-                            )
-                        )
-                    }
-                }
-
-                val detalles: List<ParteDiarioPhoto>? = a.photos
-                if (detalles != null) {
-                    for (d: ParteDiarioPhoto in detalles) {
-                        if (d.fotoUrl.isNotEmpty()) {
-                            val file = File(Util.getFolder(context), d.fotoUrl)
-                            if (file.exists()) {
-                                b.addFormDataPart(
-                                    "files", file.name,
-                                    RequestBody.create(
-                                        MediaType.parse("multipart/form-data"), file
-                                    )
-                                )
-                            }
-                        }
-                    }
-                }
-
                 val json = Gson().toJson(a)
                 Log.i("TAG", json)
-                b.setType(MultipartBody.FORM)
-                b.addFormDataPart("data", json)
-
-                val body = b.build()
+                val body =
+                    RequestBody.create(MediaType.parse("application/json; charset=utf-8"), json)
                 Observable.zip(
-                    Observable.just(a), roomRepository.sendRegistroOt(body), { _, mensaje ->
+                    Observable.just(a), roomRepository.saveParteDiario(body), { _, mensaje ->
                         mensaje
                     })
             }
@@ -248,13 +254,7 @@ internal constructor(private val roomRepository: AppRepository, private val retr
             .delay(1000, TimeUnit.MILLISECONDS)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(object : Observer<Mensaje> {
-                override fun onComplete() {
-                    mensajeSuccess.value = "Enviado"
-                }
-
-                override fun onSubscribe(d: Disposable) {
-                }
-
+                override fun onSubscribe(d: Disposable) {}
                 override fun onNext(t: Mensaje) {
                     updateOt(t)
                 }
@@ -272,6 +272,10 @@ internal constructor(private val roomRepository: AppRepository, private val retr
                         mensajeError.postValue(t.message)
                     }
                 }
+
+                override fun onComplete() {
+                    mensajeSuccess.value = "Enviado"
+                }
             })
     }
 
@@ -280,14 +284,8 @@ internal constructor(private val roomRepository: AppRepository, private val retr
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(object : CompletableObserver {
-                override fun onComplete() {
-
-                }
-
-                override fun onSubscribe(d: Disposable) {
-
-                }
-
+                override fun onComplete() {}
+                override fun onSubscribe(d: Disposable) {}
                 override fun onError(e: Throwable) {
 //                    mensajeError.value = e.message
                 }

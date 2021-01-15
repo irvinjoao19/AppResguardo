@@ -15,8 +15,10 @@ import com.dsige.dominion.appresguardo.helper.Util
 import io.reactivex.Completable
 import io.reactivex.Observable
 import okhttp3.MediaType
+import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.Call
+import java.io.File
 
 class AppRepoImp(private val apiService: ApiService, private val dataBase: AppDataBase) :
     AppRepository {
@@ -215,7 +217,8 @@ class AppRepoImp(private val apiService: ApiService, private val dataBase: AppDa
             val detalle: List<MensajeDetalle>? = t.detalle
             if (detalle != null) {
                 for (d: MensajeDetalle in detalle) {
-                    dataBase.parteDiarioPhotoDao().updateEnabledPhoto(d.detalleBaseId,d.detalleRetornoId)
+                    dataBase.parteDiarioPhotoDao()
+                        .updateEnabledPhoto(d.detalleBaseId, d.detalleRetornoId)
                 }
             }
         }
@@ -274,5 +277,51 @@ class AppRepoImp(private val apiService: ApiService, private val dataBase: AppDa
         return Completable.fromAction {
             dataBase.parteDiarioDao().updateParteDiarioTask(t)
         }
+    }
+
+    override fun getOtFile(i: Int): Observable<List<String>> {
+        return Observable.create {
+            val data: ArrayList<String> = ArrayList()
+            val v: List<ParteDiario> = dataBase.parteDiarioDao().getAllRegistroTask(i)
+            if (v.isNotEmpty()) {
+                val list: ArrayList<ParteDiario> = ArrayList()
+                v.forEach { r ->
+                    r.personals =
+                        dataBase.personalDao().getPersonalByOt(r.parteDiarioId)
+                    r.photos =
+                        dataBase.parteDiarioPhotoDao().getParteDiarioPhotoByOt(r.parteDiarioId)
+                    list.add(r)
+                }
+
+                list.forEach { p ->
+                    if (p.firmaEfectivoPolicial.isNotEmpty()) {
+                        data.add(p.firmaEfectivoPolicial)
+                    }
+                    if (p.firmaJefeCuadrilla.isNotEmpty()) {
+                        data.add(p.firmaJefeCuadrilla)
+                    }
+                    val detalles: List<ParteDiarioPhoto>? = p.photos
+                    if (detalles != null) {
+                        for (d: ParteDiarioPhoto in detalles) {
+                            if (d.fotoUrl.isNotEmpty()) {
+                                data.add(d.fotoUrl)
+                            }
+                        }
+                    }
+                }
+                it.onNext(data)
+            } else
+                it.onError(Throwable("No hay datos disponibles por enviar"))
+
+            it.onComplete()
+        }
+    }
+
+    override fun sendFile(body: RequestBody): Observable<String> {
+        return apiService.saveFile(body)
+    }
+
+    override fun saveParteDiario(body: RequestBody): Observable<Mensaje> {
+        return apiService.saveParteDiario(body)
     }
 }

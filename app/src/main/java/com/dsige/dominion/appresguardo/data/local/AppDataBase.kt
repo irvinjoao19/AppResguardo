@@ -19,7 +19,7 @@ import com.dsige.dominion.appresguardo.data.local.model.*
         TipoDocumento::class,
         ParteDiarioPhoto::class
     ],
-    version = 10, // version 2 en play store
+    version = 11, // version 2 en play store
     exportSchema = false
 )
 abstract class AppDataBase : RoomDatabase() {
